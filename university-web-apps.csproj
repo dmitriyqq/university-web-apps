@@ -7,7 +7,7 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>movie-picker-client\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
-    <RootNamespace>university_web_apps</RootNamespace>
+    <RootNamespace>MoviePicker</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

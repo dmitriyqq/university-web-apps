@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace university_web_apps.Controllers
+namespace MoviePicker.Controllers
 {
     [ApiController]
     [Route("[controller]")]

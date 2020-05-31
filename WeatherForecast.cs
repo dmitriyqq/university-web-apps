@@ -1,6 +1,6 @@
 using System;
 
-namespace university_web_apps
+namespace MoviePicker
 {
     public class WeatherForecast
     {
