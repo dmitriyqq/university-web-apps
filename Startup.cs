@@ -28,6 +28,10 @@ namespace MoviePicker
 
             services.AddControllersWithViews();
             services.AddSingleton<UsersService>();
+            services.AddSingleton<MoviesService>();
+            services.AddSingleton<MovieCollectionsService>();
+            services.AddSingleton<MovieCollectionsHistoryService>();
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

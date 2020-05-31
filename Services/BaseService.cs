@@ -21,11 +21,13 @@ namespace MoviePicker.Services
             _collection = database.GetCollection<T>(collectionName);
         }
 
-        public List<T> Get() =>
-            _collection.Find(model => true).ToList();
+        public List<T> Get(int skip = 0, int take = 10) =>
+            _collection.Find(model => true).Skip(skip).Limit(take).ToList();
 
         public T Get(string id) =>
             _collection.Find(model => model.Id == id).FirstOrDefault();
+
+        public long Count() => _collection.CountDocuments(model => true);
 
         public T Create(T model)
         {
