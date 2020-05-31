@@ -1,6 +1,4 @@
-using System;
-
-namespace MoviePicker
+namespace MoviePicker.Config
 {
     public class MongoOptions
     {
