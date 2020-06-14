@@ -9,7 +9,7 @@ using MoviePicker.Models;
 
 namespace MoviePicker.Services
 {
-    public class UsersService : BaseService<User>
+    public class UsersService : BaseService<User>, IUsersService
     {
         public UsersService(IOptions<MongoOptions> settings) : base(settings, "users")
         {

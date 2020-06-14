@@ -9,7 +9,7 @@ using MoviePicker.Models;
 
 namespace MoviePicker.Services
 {
-    public class BaseService<T> where T : Model
+    public class BaseService<T> : IBaseService<T> where T : Model
     {
         protected IMongoCollection<T> _collection { get; }
 
@@ -21,27 +21,32 @@ namespace MoviePicker.Services
             _collection = database.GetCollection<T>(collectionName);
         }
 
-        public List<T> Get(int skip = 0, int take = 10) =>
-            _collection.Find(model => true).Skip(skip).Limit(take).ToList();
+        public virtual List<T> Get(Paging paging) {
+            var result = _collection.Find(model => true);
+            paging.TotalCount = result.CountDocuments();
 
-        public T Get(string id) =>
+            return result.Skip(paging.Skip).Limit(paging.Take).ToList();
+        }
+            
+
+        public virtual T Get(string id) =>
             _collection.Find(model => model.Id == id).FirstOrDefault();
 
-        public long Count() => _collection.CountDocuments(model => true);
+        public virtual long Count() => _collection.CountDocuments(model => true);
 
-        public T Create(T model)
+        public virtual T Create(T model)
         {
             _collection.InsertOne(model);
             return model;
         }
 
-        public void Update(string id, T newModel) =>
+        public virtual void Update(string id, T newModel) =>
             _collection.ReplaceOne(model => model.Id == id, newModel);
 
-        public void Remove(T model) =>
+        public virtual void Remove(T model) =>
             _collection.DeleteOne(x => x.Id == model.Id);
 
-        public void Remove(string id) => 
+        public virtual void Remove(string id) => 
             _collection.DeleteOne(x => x.Id == id);
     }
 }

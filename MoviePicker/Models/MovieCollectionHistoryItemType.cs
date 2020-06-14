@@ -1,6 +1,6 @@
 namespace MoviePicker.Models
 {
-    public enum CollectionHistoryItemType
+    public enum MovieCollectionHistoryItemType
     {
         CollectionCreated,
         MovieAdded,

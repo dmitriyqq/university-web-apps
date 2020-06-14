@@ -14,10 +14,23 @@ namespace MoviePicker.Models
 
         [BsonElement("owner")]
         [JsonProperty("owner")]
-        public string Owner { get; set; }
+        public User Owner { get; set; }
+
+        [BsonElement("selectedMovie")]
+        [JsonProperty("selectedMovie")]
+        public string SelectedMovie { get; set; }
 
         [BsonElement("groupMembers")]
         [JsonProperty("groupMembers")]
         public IEnumerable<User> GroupMemebers { get; set; }
+
+        [BsonIgnore]
+        [JsonProperty("history", NullValueHandling = NullValueHandling.Ignore)]
+        public IEnumerable<MovieCollectionHistoryItem> History { get; set; }
+
+        [BsonIgnore]
+        [JsonProperty("movies", NullValueHandling = NullValueHandling.Ignore)]
+        public IEnumerable<Movie> Movies { get; set; }
+
     }
 }

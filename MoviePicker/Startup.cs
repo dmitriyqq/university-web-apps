@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using MoviePicker.Config;
+using MoviePicker.Middlewares;
 using MoviePicker.Services;
 
 namespace MoviePicker
@@ -25,17 +26,29 @@ namespace MoviePicker
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<MongoOptions>(Configuration.GetSection("mongoConnection"));
+            services.Configure<OMDBConfig>(Configuration.GetSection("omdb"));
 
             services.AddControllersWithViews();
-            services.AddSingleton<UsersService>();
-            services.AddSingleton<MoviesService>();
-            services.AddSingleton<MovieCollectionsService>();
-            services.AddSingleton<MovieCollectionsHistoryService>();
+            services.AddSingleton<IMovieCollectionsHistoryService, MovieCollectionsHistoryService>();
+            services.AddSingleton<IMovieCollectionsService, MovieCollectionsService>();
+            services.AddSingleton<IMoviesService, MoviesService>();
+            services.AddSingleton<IOMDBService, OMDBService>();
+            services.AddSingleton<IUsersService, UsersService>();
+
+            services.AddHttpClient("omdb", c =>
+            {
+                var resource = Configuration.GetSection("omdb").GetValue<string>("Resource");
+                if (string.IsNullOrWhiteSpace(resource))
+                {
+                    throw new System.Exception("omdb not configured");
+                }
+                c.BaseAddress = new System.Uri(resource);
+            });
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "movie-picker-client/build";
+                configuration.RootPath = "../movie-picker-client/build";
             });
         }
 
@@ -56,7 +69,7 @@ namespace MoviePicker
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
+            app.UseMiddleware<LoggerMiddleware>();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -68,7 +81,7 @@ namespace MoviePicker
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "movie-picker-client";
+                spa.Options.SourcePath = "../movie-picker-client";
 
                 if (env.IsDevelopment())
                 {
