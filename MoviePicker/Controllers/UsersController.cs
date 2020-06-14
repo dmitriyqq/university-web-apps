@@ -201,10 +201,44 @@ namespace MoviePicker.Controllers
 
             if (string.IsNullOrWhiteSpace(newUser.Name))
             {
-                return this.OkBadRequest("Invalid user name");
+                return this.OkBadRequest(nameof(userRequest.Name));
             }
 
             return this.OkJson(_usersService.Create(newUser));
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put([FromRoute] string id, [FromBody] CreateUserRequest userRequest)
+        {
+            if (string.IsNullOrWhiteSpace(userRequest.Name))
+            {
+                return this.OkBadRequest(nameof(userRequest.Name));
+            }
+
+            var oldUser = _usersService.Get(id);
+            if (oldUser == null)
+            {
+                return this.OkNotFound(nameof(User), id);
+            }
+
+
+            var newUser = new User() { Name = userRequest.Name, Id = id };
+            _usersService.Update(id, newUser);
+            return this.OkJson(newUser);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] string id)
+        {
+            var user = _usersService.Get(id);
+
+            if (user == null)
+            {
+                return this.OkNotFound(nameof(User), user.Id);
+            }
+
+            _usersService.Remove(id);
+            return this.OkJson(user);
         }
     }
 }

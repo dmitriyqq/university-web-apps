@@ -30,7 +30,7 @@ namespace MoviePicker.Services
             
 
         public virtual T Get(string id) =>
-            _collection.Find(model => model.Id == id).FirstOrDefault();
+            _collection.Find(model => model.Id == id)?.FirstOrDefault();
 
         public virtual long Count() => _collection.CountDocuments(model => true);
 
